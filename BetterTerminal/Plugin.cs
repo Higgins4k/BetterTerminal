@@ -45,6 +45,9 @@ namespace BetterTerminal
             Registry = TerminalRegistry.CreateTerminalRegistry();
             Registry.RegisterFrom(this);
 
+            GameObject networkHandlerObject = new GameObject("TerminalNetworkHandler");
+            TerminalNetworkHandler networkHandler = networkHandlerObject.AddComponent<TerminalNetworkHandler>();
+            TerminalNetworkHandler.Instance = networkHandler;
 
             pnt = BepInEx.Logging.Logger.CreateLogSource(modGUID);
 
@@ -52,6 +55,7 @@ namespace BetterTerminal
             pnt.LogInfo("Make sure to review BetterTerminal");
 
             harmony.PatchAll(typeof(MainBetterTerminal));
+            harmony.PatchAll(typeof(TerminalNetworkHandler));
 
 
         }
@@ -99,7 +103,7 @@ namespace BetterTerminal
             //Credit to ShipLoot on grabbing the item values
             return $"There is currently ${totalScrapValue} value of scrap inside of the ship";
         }
-
+        
         [TerminalCommand("CancelDelivery", true), CommandInfo("Cancel purchased items for a refund before delivery")]
         public string CancelDeliveryCommand()
         {
@@ -121,9 +125,14 @@ namespace BetterTerminal
 
             if (terminalInstance.numberOfItemsInDropship > 0)
             {
+                
                 Debug.LogError(terminalInstance.numberOfItemsInDropship);
                 Debug.LogError(terminalInstance.numberOfItemsInDropship);
+                TerminalNetworkHandler.Instance.SyncOrderedItems(terminalInstance.orderedItemsFromTerminal);
+                Debug.LogError(terminalInstance.orderedItemsFromTerminal.Count);
                 int credtoadd = 0;
+                
+
                 foreach (var itemIndex in terminalInstance.orderedItemsFromTerminal)
                 {
                     if (itemIndex >= 0 && itemIndex < terminalInstance.buyableItemsList.Count())
