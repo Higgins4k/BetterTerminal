@@ -25,7 +25,7 @@ namespace BetterTerminal
     public class MainBetterTerminal : BaseUnityPlugin
     {
 
-        private const string modVersion = "1.0.5";
+        private const string modVersion = "1.0.6";
 
         private const string modGUID = "zg.BetterTerminal";
         private const string modName = "BetterTerminal";
@@ -113,10 +113,7 @@ namespace BetterTerminal
             if (terminalInstance.numberOfItemsInDropship > 0)
             {
                 
-                Debug.LogError(terminalInstance.numberOfItemsInDropship);
-                Debug.LogError(terminalInstance.numberOfItemsInDropship);
                 TerminalNetworkHandler.Instance.SyncOrderedItems(terminalInstance.orderedItemsFromTerminal);
-                Debug.LogError(terminalInstance.orderedItemsFromTerminal.Count);
                 int credtoadd = 0;
                 
 
@@ -125,7 +122,6 @@ namespace BetterTerminal
                     if (itemIndex >= 0 && itemIndex < terminalInstance.buyableItemsList.Count())
                     {
                         credtoadd += terminalInstance.buyableItemsList[itemIndex].creditsWorth;
-                        Debug.LogError(credtoadd);
                     }
                     else
                     {
