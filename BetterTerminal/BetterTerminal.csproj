@@ -10,11 +10,12 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>BetterTerminal</RootNamespace>
     <AssemblyName>BetterTerminal</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -43,8 +44,8 @@
     <Reference Include="BepInEx, Version=5.4.20.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\BepInEx.BaseLib.5.4.20\lib\net35\BepInEx.dll</HintPath>
     </Reference>
-    <Reference Include="LethalAPI.TerminalCommands">
-      <HintPath>..\..\..\..\Downloads\LethalAPI.TerminalCommands.dll</HintPath>
+    <Reference Include="LethalAPI.Terminal">
+      <HintPath>..\..\..\..\OneDrive\Desktop\fffffffffffffffffffffffffffff\LethalAPI.Terminal.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Cecil, Version=0.11.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
       <HintPath>..\packages\Mono.Cecil.0.11.4\lib\net40\Mono.Cecil.dll</HintPath>

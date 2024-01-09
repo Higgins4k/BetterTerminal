@@ -12,7 +12,10 @@ using UnityEngine;
 using GameNetcodeStuff;
 using UnityEngine.Events;
 using System.Runtime.CompilerServices;
-
+using LethalAPI.LibTerminal.Models;
+using LethalAPI.LibTerminal;
+using LethalAPI.LibTerminal.Attributes;
+using LethalAPI.LibTerminal.Models.Enums;
 namespace BetterTerminal
 {
 
@@ -22,13 +25,13 @@ namespace BetterTerminal
     public class MainBetterTerminal : BaseUnityPlugin
     {
 
-        private const string modVersion = "1.0.1";
+        private const string modVersion = "1.0.5";
 
         private const string modGUID = "zg.BetterTerminal";
         private const string modName = "BetterTerminal";
         private readonly Harmony harmony = new Harmony(modGUID);
         private static MainBetterTerminal instance;
-        private TerminalModRegistry Registry;
+        private TerminalModRegistry Commands;
 
         internal ManualLogSource pnt;
 
@@ -39,8 +42,8 @@ namespace BetterTerminal
             {
                 instance = this;
             }
-            Registry = TerminalRegistry.CreateTerminalRegistry();
-            Registry.RegisterFrom(this);
+            Commands = TerminalRegistry.CreateTerminalRegistry();
+            Commands.RegisterFrom(this);
 
             GameObject networkHandlerObject = new GameObject("TerminalNetworkHandler");
             TerminalNetworkHandler networkHandler = networkHandlerObject.AddComponent<TerminalNetworkHandler>();
@@ -56,7 +59,7 @@ namespace BetterTerminal
 
 
         }
-        [TerminalCommand("ScanInside"), CommandInfo("See how many items are INSIDE the facility")]
+        [TerminalCommand("ScanInside", true), CommandInfo("See how many items are INSIDE the facility")]
         public string ScanInsideCommand()
         {
             Debug.Log("Got to debug 1");
@@ -101,24 +104,11 @@ namespace BetterTerminal
             return $"There is currently ${totalScrapValue} value of scrap inside of the ship";
         }
         
-        [TerminalCommand("CancelDelivery", true), CommandInfo("Cancel purchased items for a refund before delivery")]
+        [TerminalCommand("CancelDelivery", true), AllowedCaller(AllowedCaller.Host)]
+        [CommandInfo("Cancel purchased items for a refund before delivery")]
         public string CancelDeliveryCommand()
         {
             Terminal terminalInstance = UnityEngine.GameObject.FindObjectOfType<Terminal>();
-            float walkie = terminalInstance.buyableItemsList[0].creditsWorth;
-            float flashlight = terminalInstance.buyableItemsList[1].creditsWorth;
-            float shovel = terminalInstance.buyableItemsList[2].creditsWorth;
-            float lockpick = terminalInstance.buyableItemsList[3].creditsWorth;
-            float proflash = terminalInstance.buyableItemsList[4].creditsWorth;
-            float stun = terminalInstance.buyableItemsList[5].creditsWorth;
-            float boombox = terminalInstance.buyableItemsList[6].creditsWorth;
-            float tzpin = terminalInstance.buyableItemsList[7].creditsWorth;
-            float zapgun = terminalInstance.buyableItemsList[8].creditsWorth;
-            float jetpack = terminalInstance.buyableItemsList[9].creditsWorth;
-            float extladder = terminalInstance.buyableItemsList[10].creditsWorth;
-            float radar = terminalInstance.buyableItemsList[11].creditsWorth;
-            float spray = terminalInstance.buyableItemsList[12].creditsWorth;
-
 
             if (terminalInstance.numberOfItemsInDropship > 0)
             {
@@ -160,7 +150,7 @@ namespace BetterTerminal
             }
         }
 
-        [TerminalCommand("bettermods"), CommandInfo("Info about BetterMods")]
+        [TerminalCommand("bettermods", true), CommandInfo("Info about BetterMods")]
         public string BetterModsCommand()
         {
             return "BetterSpec and BetterTerminal were made by Higgins, You can get them both on Thunderstore";
