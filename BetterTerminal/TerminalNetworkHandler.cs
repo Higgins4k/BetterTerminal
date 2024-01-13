@@ -16,7 +16,7 @@ public class TerminalNetworkHandler : NetworkBehaviour
         if (IsServer)
         {
             SyncOrderedItemsClientRpc(orderedItems);
-        }
+        }   
         else
         {
             SyncOrderedItemsServerRpc(orderedItems);

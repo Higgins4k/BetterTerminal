@@ -16,6 +16,9 @@ using LethalAPI.LibTerminal.Models;
 using LethalAPI.LibTerminal;
 using LethalAPI.LibTerminal.Attributes;
 using LethalAPI.LibTerminal.Models.Enums;
+using BepInEx.Logging;
+
+
 namespace BetterTerminal
 {
 
@@ -24,17 +27,23 @@ namespace BetterTerminal
 
     public class MainBetterTerminal : BaseUnityPlugin
     {
+        public static new BetterTerminalConfig Config { get; internal set; }
 
         private const string modVersion = "1.0.7";
 
         private const string modGUID = "zg.BetterTerminal";
         private const string modName = "BetterTerminal";
         private readonly Harmony harmony = new Harmony(modGUID);
-        private static MainBetterTerminal instance;
+        public static MainBetterTerminal instance { get; internal set; }
         private TerminalModRegistry Commands;
 
         internal ManualLogSource pnt;
 
+
+        public ManualLogSource getLogger()
+        {
+            return this.Logger;
+        }
         void Awake()
         {
 
@@ -42,6 +51,8 @@ namespace BetterTerminal
             {
                 instance = this;
             }
+            Config = new BetterTerminalConfig(base.Config);
+
             Commands = TerminalRegistry.CreateTerminalRegistry();
             Commands.RegisterFrom(this);
             Commands.RegisterFrom<Alias>();
@@ -63,6 +74,14 @@ namespace BetterTerminal
         [TerminalCommand("ScanInside", true), CommandInfo("See how many items are INSIDE the facility")]
         public string ScanInsideCommand()
         {
+            if (Config.scanInsideDisable.Value)
+            {
+                return "This command is Disabled";
+            }
+            if (Config.scanInsideHost.Value && !isHost())
+            {
+                return "This command is Host Only";
+            }
             Debug.Log("Got to debug 1");
             System.Random random = new System.Random(StartOfRound.Instance.randomMapSeed + 91);
             int num2 = 0;
@@ -89,6 +108,14 @@ namespace BetterTerminal
         [TerminalCommand("Items", true), CommandInfo("See the value of items inside of the ship")]
         public string ItemsCommand()
         {
+            if (Config.itemsDisable.Value)
+            {
+                return "This command is Disabled";
+            }
+            if (Config.itemsHost.Value && !isHost())
+            {
+                return "This command is Host Only";
+            }
             GameObject ship = GameObject.Find("/Environment/HangarShip");
             if (ship == null)
             {
@@ -109,6 +136,14 @@ namespace BetterTerminal
         [CommandInfo("Cancel purchased items for a refund before delivery")]
         public string CancelDeliveryCommand()
         {
+            if (Config.cancelDeliveryDisable.Value)
+            {
+                return "This command is Disabled";
+            }
+            if (Config.cancelDeliveryHost.Value && !isHost())
+            {
+                return "This command is Host Only";
+            }
             Terminal terminalInstance = UnityEngine.GameObject.FindObjectOfType<Terminal>();
 
             if (terminalInstance.numberOfItemsInDropship > 0)
@@ -156,6 +191,14 @@ namespace BetterTerminal
         [TerminalCommand("lights", true), CommandInfo("Use this to toggle ship lights remotely")]
         public string LightsCommand()
         {
+            if (Config.lightsDisable.Value)
+            {
+                return "This command is Disabled";
+            }
+            if (Config.lightsHost.Value && !isHost())
+            {
+                return "This command is Host Only";
+            }
             StartOfRound.Instance.shipRoomLights.ToggleShipLights();
             return "You've toggled the lights inside of the ship";
         }
@@ -163,6 +206,14 @@ namespace BetterTerminal
         [TerminalCommand("tp", true), CommandInfo("Teleport the player currently on the monitor")]
         public string TpCommand()
         {
+            if (Config.teleportDisable.Value)
+            {
+                return "This command is Disabled";
+            }
+            if (Config.teleportHost.Value && !isHost())
+            {
+                return "This command is Host Only";
+            }
             ShipTeleporter[] array = UnityEngine.Object.FindObjectsOfType<ShipTeleporter>();
 
             if (array != null && array.Length > 0)
@@ -180,6 +231,14 @@ namespace BetterTerminal
         [TerminalCommand("door", true), CommandInfo("Safely toggle the Ship Door")]
         public string ToggleDoorCommand()
         {
+            if (Config.doorDisable.Value)
+            {
+                return "This command is Disabled";
+            }
+            if (Config.doorHost.Value && !isHost())
+            {
+                return "This command is Host Only";
+            }
             InteractTrigger doorButton = GameObject.Find(StartOfRound.Instance.hangarDoorsClosed ? "StartButton" : "StopButton").GetComponentInChildren<InteractTrigger>();
             doorButton.onInteract.Invoke(GameNetworkManager.Instance.localPlayerController);
             
@@ -197,6 +256,14 @@ namespace BetterTerminal
         [TerminalCommand("Launch", true), CommandInfo("Use this to land or launch the ship")]
         public string LaunchCommand()
         {
+            if (Config.launchDisable.Value)
+            {
+                return "This command is Disabled";
+            }
+            if (Config.launchHost.Value && !isHost())
+            {
+                return "This command is Host Only";
+            }
             if (GameObject.Find("StartGameLever") == null)
             {
                 return "Error finding the Lever";
@@ -231,7 +298,17 @@ namespace BetterTerminal
         [TerminalCommand("itp", true), CommandInfo("Uses the inverse teleporter")]
         public string InverseCommand()
         {
-            if(!StartOfRound.Instance.shipHasLanded)
+           
+            if (Config.itpDisable.Value)
+            {
+                return "This command is Disabled";
+            }
+            if (Config.itpHost.Value && !isHost())
+            {
+                return "This command is Host Only";
+            }
+
+            if (!StartOfRound.Instance.shipHasLanded)
             {
                 return "You can't teleport in space you'll die!";
             }
@@ -259,6 +336,10 @@ namespace BetterTerminal
         [CommandInfo("Resets all the ships furniture")]
         public string RestartCommand()
         {
+            if(Config.restartCommandDisable.Value)
+            {
+                return "This command is Disabled";
+            }
             if (!StartOfRound.Instance.shipDoorsEnabled)
             {
                 StartOfRound.Instance.ResetShip();
@@ -267,6 +348,11 @@ namespace BetterTerminal
             return "You must be in space to restart, the company wants you working on the moon";
         }
 
+
+        private bool isHost()
+        {
+            return RoundManager.Instance.NetworkManager.IsHost;
+        }
 
     }
 
