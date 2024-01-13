@@ -25,7 +25,7 @@ namespace BetterTerminal
     public class MainBetterTerminal : BaseUnityPlugin
     {
 
-        private const string modVersion = "1.0.6";
+        private const string modVersion = "1.0.7";
 
         private const string modGUID = "zg.BetterTerminal";
         private const string modName = "BetterTerminal";
@@ -44,6 +44,7 @@ namespace BetterTerminal
             }
             Commands = TerminalRegistry.CreateTerminalRegistry();
             Commands.RegisterFrom(this);
+            Commands.RegisterFrom<Alias>();
 
             GameObject networkHandlerObject = new GameObject("TerminalNetworkHandler");
             TerminalNetworkHandler networkHandler = networkHandlerObject.AddComponent<TerminalNetworkHandler>();
@@ -227,6 +228,44 @@ namespace BetterTerminal
 
         }
 
+        [TerminalCommand("itp", true), CommandInfo("Uses the inverse teleporter")]
+        public string InverseCommand()
+        {
+            if(!StartOfRound.Instance.shipHasLanded)
+            {
+                return "You can't teleport in space you'll die!";
+            }
+            if (GameObject.Find("InverseTeleporter(Clone)") == null)
+            {
+                return "You need to purchase a inverse teleporter";
+            }
+            ShipTeleporter invTeleporter = GameObject.Find("InverseTeleporter(Clone)").GetComponent<ShipTeleporter>();
+            FieldInfo cooldownTime = invTeleporter.GetType().GetField("cooldownTime", BindingFlags.NonPublic | BindingFlags.Instance);
+            float cooldownTimeNum = (float)cooldownTime.GetValue(invTeleporter);
+
+            if (cooldownTimeNum > 0)
+            {
+                return "The inverse teleporter is currently on cooldown";
+            }
+            if (invTeleporter == null)
+            {
+                return "You need to purchase a inverse teleporter";
+            }
+            invTeleporter.buttonTrigger.onInteract.Invoke(GameNetworkManager.Instance.localPlayerController);
+            return "You sent him to die, Goodluck!";
+        }
+
+        [TerminalCommand("Restart", true), AllowedCaller(AllowedCaller.Host)]
+        [CommandInfo("Resets all the ships furniture")]
+        public string RestartCommand()
+        {
+            if (!StartOfRound.Instance.shipDoorsEnabled)
+            {
+                StartOfRound.Instance.ResetShip();
+                return "The company has shunned you, Go back to square 1";
+            }
+            return "You must be in space to restart, the company wants you working on the moon";
+        }
 
 
     }
