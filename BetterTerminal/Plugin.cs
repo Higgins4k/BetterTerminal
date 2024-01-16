@@ -29,7 +29,7 @@ namespace BetterTerminal
     {
         public static new BetterTerminalConfig Config { get; internal set; }
 
-        private const string modVersion = "1.0.7";
+        private const string modVersion = "1.1.0";
 
         private const string modGUID = "zg.BetterTerminal";
         private const string modName = "BetterTerminal";
@@ -139,10 +139,6 @@ namespace BetterTerminal
             if (Config.cancelDeliveryDisable.Value)
             {
                 return "This command is Disabled";
-            }
-            if (Config.cancelDeliveryHost.Value && !isHost())
-            {
-                return "This command is Host Only";
             }
             Terminal terminalInstance = UnityEngine.GameObject.FindObjectOfType<Terminal>();
 

@@ -12,13 +12,13 @@ namespace BetterTerminal
     public class BetterTerminalConfig : SyncedInstance<BetterTerminalConfig>
     {
         public ConfigEntry<bool> restartCommandDisable;
+        public ConfigEntry<bool> cancelDeliveryDisable; //requires host to work correctly
 
         public ConfigEntry<bool> itpDisable, itpHost;
         public ConfigEntry<bool> launchDisable, launchHost;
         public ConfigEntry<bool> doorDisable, doorHost;
         public ConfigEntry<bool> teleportDisable, teleportHost;
         public ConfigEntry<bool> lightsDisable, lightsHost;
-        public ConfigEntry<bool> cancelDeliveryDisable, cancelDeliveryHost;
         public ConfigEntry<bool> itemsDisable, itemsHost;
         public ConfigEntry<bool> scanInsideDisable, scanInsideHost;
 
@@ -97,12 +97,6 @@ namespace BetterTerminal
               "Disable",
               false,
               "Disables the Cancel Delivery command"
-            );
-            cancelDeliveryHost = cfg.Bind(
-              "Commands.Lights",
-              "Host Only",
-              false,
-              "Makes the Cancel Delivery command for hosts only"
             );
             itemsDisable = cfg.Bind(
               "Commands.Items",
