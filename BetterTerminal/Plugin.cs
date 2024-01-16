@@ -210,6 +210,14 @@ namespace BetterTerminal
             {
                 return "This command is Host Only";
             }
+            ShipTeleporter TPMachine = GameObject.Find("Teleporter(Clone)").GetComponent<ShipTeleporter>();
+            FieldInfo cooldownTime = TPMachine.GetType().GetField("cooldownTime", BindingFlags.NonPublic | BindingFlags.Instance);
+            float cooldownTimeNum = (float)cooldownTime.GetValue(TPMachine);
+
+            if (cooldownTimeNum > 0)
+            {
+                return "The teleporter is currently on cooldown";
+            }
             ShipTeleporter[] array = UnityEngine.Object.FindObjectsOfType<ShipTeleporter>();
 
             if (array != null && array.Length > 0)
