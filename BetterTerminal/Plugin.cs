@@ -71,6 +71,12 @@ namespace BetterTerminal
 
 
         }
+
+
+
+
+
+
         [TerminalCommand("ScanInside", true), CommandInfo("See how many items are INSIDE the facility")]
         public string ScanInsideCommand()
         {
