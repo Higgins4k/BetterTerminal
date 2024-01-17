@@ -226,7 +226,7 @@ namespace BetterTerminal
             }
             if (TPMachine == null)
             {
-                return "You need to purchase a inverse teleporter";
+                return "You must purchase a Teleporter to teleport";
             }
             else
             {
