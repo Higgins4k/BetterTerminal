@@ -224,17 +224,14 @@ namespace BetterTerminal
             {
                 return "The teleporter is currently on cooldown";
             }
-            ShipTeleporter[] array = UnityEngine.Object.FindObjectsOfType<ShipTeleporter>();
-
-            if (array != null && array.Length > 0)
+            if (TPMachine == null)
             {
-                ShipTeleporter val = array[0];
-                val.PressTeleportButtonOnLocalClient();
-                return "Teleporting";
+                return "You need to purchase a inverse teleporter";
             }
             else
             {
-                return "You must purchase a Teleporter to teleport";
+                TPMachine.buttonTrigger.onInteract.Invoke(GameNetworkManager.Instance.localPlayerController);
+                return "Teleporting";
             }
         }
 
@@ -357,6 +354,11 @@ namespace BetterTerminal
             }
             return "You must be in space to restart, the company wants you working on the moon";
         }
+
+
+
+
+
 
 
         private bool isHost()

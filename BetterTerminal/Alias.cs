@@ -71,7 +71,7 @@ namespace BetterTerminal
             return instance.LaunchCommand();
         }
 
-        [TerminalCommand("Inverse", true)]
+        [TerminalCommand("InverseTp", true)]
         public string InverseAlias()
         {
             return instance.InverseCommand();
