@@ -29,7 +29,7 @@ namespace BetterTerminal
     {
         public static new BetterTerminalConfig Config { get; internal set; }
 
-        private const string modVersion = "1.1.0";
+        private const string modVersion = "1.1.1";
 
         private const string modGUID = "zg.BetterTerminal";
         private const string modName = "BetterTerminal";
