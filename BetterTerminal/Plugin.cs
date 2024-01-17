@@ -88,7 +88,6 @@ namespace BetterTerminal
             {
                 return "This command is Host Only";
             }
-            Debug.Log("Got to debug 1");
             System.Random random = new System.Random(StartOfRound.Instance.randomMapSeed + 91);
             int num2 = 0;
             int num3 = 0;
@@ -96,17 +95,13 @@ namespace BetterTerminal
             GrabbableObject[] objectsOfType = UnityEngine.Object.FindObjectsOfType<GrabbableObject>();
             for (int index = 0; index < objectsOfType.Length; ++index)
             {
-                Debug.Log("Got to debug 2");
                 if (objectsOfType[index].itemProperties.isScrap && objectsOfType[index].isInFactory)
                 {
-                    Debug.Log("Got to debug 3");
                     num4 += objectsOfType[index].itemProperties.maxValue - objectsOfType[index].itemProperties.minValue;
                     num3 += Mathf.Clamp(random.Next(objectsOfType[index].itemProperties.minValue, objectsOfType[index].itemProperties.maxValue), objectsOfType[index].scrapValue - 6 * index, objectsOfType[index].scrapValue + 9 * index);
                     ++num2;
                 }
-                Debug.Log("Got to debug 4");
             }
-            Debug.Log("Got to debug 5");
             string displaying = "There are currently " + num2.ToString() + " items inside the facility";
             return displaying;
         }
